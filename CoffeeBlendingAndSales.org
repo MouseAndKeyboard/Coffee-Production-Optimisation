@@ -98,7 +98,7 @@ c = np.array([0.6, 0.8, 0.55, 0.7])
 
 p = np.array([2.25, 2.5, 2.4])
 
-objective = p.T - c.T @ A
+objective = -(p.T - c.T @ A)
 
 A_ub = np.matrix([[0.2, 0.35, 0.1], # Abundo usage
                   [0.4, 0.15, 0.35], # Colmado usage
@@ -124,6 +124,8 @@ print(f'Optimal assignment: {list(map(round, primal_result.x))}')
 print(f'Maximum value: {round(primal_result.fun)}')
 print(f'Slack values: {list(map(round, primal_result.slack))}')
 
+print()
+
 dual_objective = b_ub.T
 dual_A_ub = -A_ub.T
 dual_b_ub = objective.T
@@ -138,6 +140,15 @@ print(f'Slack values: {list(map(round, dual_result.slack))}')
 #+end_src
 
 #+RESULTS:
+: RESULTS OF PRIMAL LP
+: Optimal assignment: [20000, 25000, 30000]
+: Maximum value: -129350
+: Slack values: [24250, 2750, 0, 28000, 25000, 10000, 0, 0]
+:
+: RESULTS OF DUAL LP
+: Optimal assignment: [0, 0, 10, 0, 0, 0, 0, 2]
+: Maximum value: 129350
+: Slack values: [0, 0, 0]
 
 
 * Results
@@ -148,6 +159,5 @@ Based on the current constraints and prices, the optimal production schedule is 
 
 This production schedule generates $113825.0 (usd).
 
-** Binding Constraint:
-Analysis concludes that the existing contractual obligations to produce 10000lbs of Hotel blend is currently the limiting factor in increasing profits.
-**
+** Binding Constraints:
+Analysis has identified that the existing contractual obligations to produce 10000lbs of Hotel blend is currently the limiting factor in increasing profits.
