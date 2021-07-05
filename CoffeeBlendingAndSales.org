@@ -155,9 +155,12 @@ print(f'Slack values: {list(map(round, dual_result.slack))}')
 Based on the current constraints and prices, the optimal production schedule is as follows:
 | Hotel | Restaurant | Market |
 |-------+------------+--------|
-| 10000 |      25000 |  30000 |
+| 20000 |      25000 |  30000 |
 
-This production schedule generates $113825.0 (usd).
+This production schedule generates $129350.0 (usd).
 
 ** Binding Constraints:
-Analysis has identified that the existing contractual obligations to produce 10000lbs of Hotel blend is currently the limiting factor in increasing profits.
+Analysis has identified 3 limiting factors which are preventing rises in profits:
+1. 20000lbs Maximo bean availability.
+2. Existing contractual obligation to produce 25000lbs of Hotel blend.
+3. Existing contractual obligation to produce 30000lbs of Market blend.
