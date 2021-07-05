@@ -36,6 +36,33 @@ The relative proportion of these components is indicated for each blend as a per
 - The processing plant can handle no more than 100000 pounds per week.
 - There are ongoing contracts for production: Minimum 10000, 25000, 30000 pounds of Hotel, Restaurant and Market blend must be produced to satisfy these contracts.
 
+* Results
+** Optimal Allocation
+Based on the current constraints and prices, the optimal production schedule is as follows:
+| Hotel | Restaurant | Market |
+|-------+------------+--------|
+| 20000 |      25000 |  30000 |
+
+This production schedule generates $129350.0 (usd).
+
+** Binding Constraints:
+Analysis has identified 3 limiting factors which are preventing rises in profits:
+1. 20000lbs Maximo bean availability.
+2. Existing contractual obligation to produce 25000lbs of Hotel blend.
+3. Existing contractual obligation to produce 30000lbs of Market blend.
+
+** Sensitivity Analysis
+*** Maximo bean availability
+For every extra pound of Maximo beans made available we can expect to generate an additional $10 in profit.
+Similarly, if the availability of Maximo beans decreases, we expect to sustain losses of $10 per pound decrease.
+*** Contractual obligation to supply Market blend
+For every pound reduction in the market supply contract we can expect to generate an additional $2 in profit.
+Similarly, if our contractual obligations increase, we expect to sustain losses of $2 per pound increase.
+*** Other
+Changes to any other constraint will result in no difference in profits.
+
+
+#+LATEX: \newpage
 * Linear Programming Formalism
 ** Intro / Objective
 Objective is to maximise profit by selecting production amounts for Hotel, Restaurant and Market blends:
@@ -77,12 +104,7 @@ Provided a production schedule and Coffee Price Vector, the total revenue of thi
 \( x_1 + x_2 + x_3 \le 100000\)
 *** Non-negative Production
 \( \mathbf{x} \succeq \mathbf{0}\)
-
-** Standard Form
-let \( \mathbf{v} = \mathbf{p}^\top - \mathbf{c}^\top A \)
-let \( Z = \)
-\( \max_\mathbf{x} \mathbf{v} \cdot \mathbf{x}\)
-
+#+LATEX: \newpage
 * Code
 #+begin_src python :results output
 from scipy import optimize
@@ -150,17 +172,3 @@ print(f'Slack values: {list(map(round, dual_result.slack))}')
 : Maximum value: 129350
 : Slack values: [0, 0, 0]
 
-
-* Results
-Based on the current constraints and prices, the optimal production schedule is as follows:
-| Hotel | Restaurant | Market |
-|-------+------------+--------|
-| 20000 |      25000 |  30000 |
-
-This production schedule generates $129350.0 (usd).
-
-** Binding Constraints:
-Analysis has identified 3 limiting factors which are preventing rises in profits:
-1. 20000lbs Maximo bean availability.
-2. Existing contractual obligation to produce 25000lbs of Hotel blend.
-3. Existing contractual obligation to produce 30000lbs of Market blend.
