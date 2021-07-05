@@ -36,7 +36,7 @@ The relative proportion of these components is indicated for each blend as a per
 - The processing plant can handle no more than 100000 pounds per week.
 - There are ongoing contracts for production: Minimum 10000, 25000, 30000 pounds of Hotel, Restaurant and Market blend must be produced to satisfy these contracts.
 
-* Results
+* Results and Analysis
 ** Optimal Allocation
 Based on the current constraints and prices, the optimal production schedule is as follows:
 | Hotel | Restaurant | Market |
