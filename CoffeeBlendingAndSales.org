@@ -1,1 +1,37 @@
-#+TITLE: Coffee Blending And Sales
+#+TITLE: Cali Coffee Company Production Optimisation
+
+* Client information
+** Available products
+The Cali Coffee Company (CCC) are an international supplier of ground coffee mixes.
+In their production process they have 4 component beans:
+1. Abundo
+2. Colmado
+3. Maximo
+4. Saboro
+CCC sells 3 blends:
+1. Hotel (luxury) blend
+2. Restaurant blend
+3. Market (retail) blend
+CCC has 4 bean suppliers:
+1. Colombian Abundo
+2. Peruvian Calmado
+3. Brazilian Maximo
+4. Chilean Saboro
+
+** Coffee Blend information
+Each blend is comprised of a mix of different components.
+The relative proportion of these components is indicated for each blend as a percentage (%).
+
+
+| component                 | Hotel | Restaurant | Market | Cost/lbs($usd) | availability (lbs) |
+|---------------------------+-------+------------+--------+----------------+--------------------|
+| Abundo                    |   20% |        35% |    10% |            0.6 |              40000 |
+| Colmado                   |   40% |        15% |    35% |            0.8 |              25000 |
+| Maximo                    |   15% |        20% |    40% |           0.55 |              20000 |
+| Saboro                    |   25% |        30% |    15% |            0.7 |              45000 |
+|---------------------------+-------+------------+--------+----------------+--------------------|
+| Wholesale price/lb ($usd) |  2.25 |        2.5 |    2.4 |                |                    |
+
+** Additional Production Constraints
+- The processing plant can handle no more than 100000 pounds per week.
+- There are ongoing contracts for production: Minimum 10000, 25000, 30000 pounds of Hotel, Restaurant and Market blend must be produced to satisfy these contracts.
