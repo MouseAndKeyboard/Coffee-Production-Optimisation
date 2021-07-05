@@ -35,3 +35,110 @@ The relative proportion of these components is indicated for each blend as a per
 ** Additional Production Constraints
 - The processing plant can handle no more than 100000 pounds per week.
 - There are ongoing contracts for production: Minimum 10000, 25000, 30000 pounds of Hotel, Restaurant and Market blend must be produced to satisfy these contracts.
+
+* Linear Programming Formalism
+** Intro / Objective
+Objective is to maximise profit by selecting production amounts for Hotel, Restaurant and Market blends:
+\( \text{Profit} = \text{Revenue} - \text{Costs}\)
+
+** Production schedule
+Let our production schedule be denoted \( \mathbf{x} \).
+\( \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} \text{Hotel (lbs)} \\ \text{restaurant (lbs)} \\ \text{market (lbs)} \end{bmatrix}\)
+
+** Coffee Blend Matrix
+To get the vector of required beans for a given blend we define the following Coffee Blend Matrix \( A \):
+\( A = \begin{bmatrix} 0.2 & 0.35 & 0.1 \\ 0.4 & 0.15 & 0.35 \\ 0.15 & 0.2 & 0.4 \\ 0.25 & 0.3 & 0.15 \end{bmatrix}\)
+
+** Bean Cost Vector
+We also define a Bean Cost Vector \( \mathbf{c} \), each element in this vector is the cost/lbs ($usd) for a given component.
+\( \mathbf{c} = \begin{bmatrix} 0.6 \\ 0.8 \\ 0.55 \\ 0.7 \end{bmatrix}\)
+
+** Costs
+Provided a production schedule, coffee blend matrix and bean cost vector, the total cost of this amount of production is given by:
+\( \text{Costs} = \mathbf{c}^\top A \mathbf{x}\)
+
+** Coffee Price Vector
+We define a price vector, \( \mathbf{p}\), each element is the price/lb CCC generates for selling a particular coffee blend:
+\( \mathbf{p} = \begin{bmatrix} 2.25 \\ 2.5 \\ 2.4 \end{bmatrix}\)
+
+** Revenue
+Provided a production schedule and Coffee Price Vector, the total revenue of this amount of production is given by:
+\( \text{Revenue} = \mathbf{p}^\top \mathbf{x} \)
+
+** Objective
+\( \max_\mathbf{x} (\mathbf{p}^\top \mathbf{x} - \mathbf{c}^\top A \mathbf{x})\)
+
+** Constraints
+*** Ongoing coffee contracts
+\(\mathbf{x} \succeq \begin{bmatrix} 10000 \\ 25000 \\ 30000 \end{bmatrix}\)
+*** Supplier/bean availability
+\( A\mathbf{x} \preceq \begin{bmatrix} 40000 \\ 25000 \\ 20000 \\ 45000 \end{bmatrix} \)
+*** Processing Plant Capacity
+\( x_1 + x_2 + x_3 \le 100000\)
+*** Non-negative Production
+\( \mathbf{x} \succeq \mathbf{0}\)
+
+** Standard Form
+let \( \mathbf{v} = \mathbf{p}^\top - \mathbf{c}^\top A \)
+let \( Z = \)
+\( \max_\mathbf{x} \mathbf{v} \cdot \mathbf{x}\)
+
+* Code
+#+begin_src python
+from scipy import optimize
+import numpy as np
+
+A = np.matrix([[0.2, 0.35, 0.1],
+               [0.4, 0.15, 0.35],
+               [0.15, 0.2, 0.4],
+               [0.25, 0.3, 0.15]])
+
+c = np.array([0.6, 0.8, 0.55, 0.7])
+
+p = np.array([2.25, 2.5, 2.4])
+
+objective = p.T - c.T @ A
+
+A_ub = np.matrix([[0.2, 0.35, 0.1], # Abundo usage
+                  [0.4, 0.15, 0.35], # Colmado usage
+                  [0.15, 0.2, 0.4], # Maximo usage
+                  [0.25, 0.3, 0.15], # Saboro usage
+                  [1, 1 , 1], # Total production
+                  [-1, 0, 0], # Hotel
+                  [0, -1, 0], # Restaurant
+                  [0, 0, -1]]) # Market
+
+b_ub = np.array([40000, # Abundo availability
+                 25000, # Colmado availability
+                 20000, # Maximo availability
+                 45000, # Saboro availability
+                 100000, # Maximum production
+                 -10000, # Min Hotel
+                 -25000, # Min Restaurant
+                 -30000]) # Min Market
+
+return optimize.linprog(objective, A_ub=A_ub, b_ub=b_ub)
+#+end_src
+
+#+RESULTS:
+: con: array([], dtype=float64)
+:      fun: 113825.0
+:  message: 'Optimization terminated successfully.'
+:      nit: 9
+:    slack: array([2.62500000e+04, 6.75000000e+03, 1.50000000e+03, 3.05000000e+04,
+:        3.50000000e+04, 0.00000000e+00, 3.63797881e-12, 3.63797881e-12])
+:   status: 0
+:  success: True
+:        x: array([10000., 25000., 30000.])
+
+
+* Results
+Based on the current constraints and prices, the optimal production schedule is as follows:
+| Hotel | Restaurant | Market |
+|-------+------------+--------|
+| 10000 |      25000 |  30000 |
+
+This production schedule generates $113825.0 (usd).
+
+** Binding Constraint:
+Analysis concludes that the existing contractual obligations to produce 10000lbs of Hotel blend is currently the limiting factor in increasing profits.
