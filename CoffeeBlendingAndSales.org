@@ -84,8 +84,9 @@ let \( Z = \)
 \( \max_\mathbf{x} \mathbf{v} \cdot \mathbf{x}\)
 
 * Code
-#+begin_src python
+#+begin_src python :results output
 from scipy import optimize
+import scipy
 import numpy as np
 
 A = np.matrix([[0.2, 0.35, 0.1],
@@ -117,19 +118,26 @@ b_ub = np.array([40000, # Abundo availability
                  -25000, # Min Restaurant
                  -30000]) # Min Market
 
-return optimize.linprog(objective, A_ub=A_ub, b_ub=b_ub)
+primal_result = optimize.linprog(objective, A_ub, b_ub)
+print('RESULTS OF PRIMAL LP')
+print(f'Optimal assignment: {list(map(round, primal_result.x))}')
+print(f'Maximum value: {round(primal_result.fun)}')
+print(f'Slack values: {list(map(round, primal_result.slack))}')
+
+dual_objective = b_ub.T
+dual_A_ub = -A_ub.T
+dual_b_ub = objective.T
+
+dual_result = optimize.linprog(dual_objective, dual_A_ub, dual_b_ub)
+print('RESULTS OF DUAL LP')
+print(f'Optimal assignment: {list(map(round, dual_result.x))}')
+print(f'Maximum value: {round(dual_result.fun)}')
+print(f'Slack values: {list(map(round, dual_result.slack))}')
+
+
 #+end_src
 
 #+RESULTS:
-: con: array([], dtype=float64)
-:      fun: 113825.0
-:  message: 'Optimization terminated successfully.'
-:      nit: 9
-:    slack: array([2.62500000e+04, 6.75000000e+03, 1.50000000e+03, 3.05000000e+04,
-:        3.50000000e+04, 0.00000000e+00, 3.63797881e-12, 3.63797881e-12])
-:   status: 0
-:  success: True
-:        x: array([10000., 25000., 30000.])
 
 
 * Results
@@ -142,3 +150,4 @@ This production schedule generates $113825.0 (usd).
 
 ** Binding Constraint:
 Analysis concludes that the existing contractual obligations to produce 10000lbs of Hotel blend is currently the limiting factor in increasing profits.
+**
